@@ -1,11 +1,8 @@
-//
-// Created by zhaomingle on 4/4/23.
-//
-
 #include "noise.h"
 
 namespace inekf {
 
+    // class Noise
     Noise::Noise() {
         // set default values
         setGyroscopeNoise(0.01);
@@ -88,14 +85,14 @@ namespace inekf {
     Eigen::Matrix3d Noise::getLandmarkCov() { return Q_l_; }
 
     std::ostream &operator<<(std::ostream &os, const Noise &p) {
-        os << "--------- Noise -------------" << std::endl;
-        os << "Gyroscope Measurement Covariance: \n" << p.Q_g_ << std::endl;
-        os << "Accelerometer Measurement Covariance: \n" << p.Q_a_ << std::endl;
-        os << "Gyroscope Bias Covariance: \n" << p.Q_bg_ << std::endl;
-        os << "Accelerometer Bias Covariance: \n" << p.Q_ba_ << std::endl;
-        os << "Contact Measurement Covariance: \n" << p.Q_c_ << std::endl;
-        os << "Landmark Measurement Covariance: \n" << p.Q_l_ << std::endl;
-        os << "-----------------------------------" << std::endl;
+        os << "---------- Noise ---------- \n" << std::endl;
+        os << "Gyroscope Measurement Covariance: \n" << p.Q_g_ << std::endl << std::endl;
+        os << "Accelerometer Measurement Covariance: \n" << p.Q_a_ << std::endl << std::endl;
+        os << "Gyroscope Bias Covariance: \n" << p.Q_bg_ << std::endl << std::endl;
+        os << "Accelerometer Bias Covariance: \n" << p.Q_ba_ << std::endl << std::endl;
+        os << "Contact Measurement Covariance: \n" << p.Q_c_ << std::endl << std::endl;
+        os << "Landmark Measurement Covariance: \n" << p.Q_l_ << std::endl << std::endl;
+        os << "--------------------------- \n" << std::endl;
 
         return os;
     }

@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/6/23.
-//
-
 #include "inekf.h"
 
 namespace inekf {
@@ -26,6 +22,13 @@ namespace inekf {
     Filter::Filter(const State& state, const Noise& noise, ErrorType error_type, IMURoleType imu_role_type)
     : state_(state), noise_(noise), error_type_(error_type), imu_role_type_(imu_role_type) {
         //
+    }
+
+    void Filter::resetObservationMatrices() {
+        // reset and clear observation matrices: Z, H, N
+        Z_ = Eigen::MatrixXd();
+        H_ = Eigen::MatrixXd();
+        N_ = Eigen::MatrixXd();
     }
 
     // class InEKF
@@ -77,11 +80,14 @@ namespace inekf {
     void InEKF::clear() {
         state_ = State();
         noise_ = Noise();
+
         Phi_ = Eigen::MatrixXd();
         Q_d_ = Eigen::MatrixXd();
+
         Z_ = Eigen::MatrixXd();
         H_ = Eigen::MatrixXd();
         N_ = Eigen::MatrixXd();
+
         contacts_.clear();
         estimated_contact_positions_.clear();
         prior_landmarks_.clear();
@@ -111,12 +117,13 @@ namespace inekf {
             Eigen::MatrixXd X_rem = state_.getXMatrix();
             Eigen::MatrixXd P_rem = state_.getP();
             // remove corresponding row and column from X
-            removeMatrixRowAndColumn(it->second, X_rem);
+            removeMatrixRowAndColumn(it->second, X_rem, 1);
             // remove 3 rows and columns from P
             unsigned int startIdx = 3 + 3 * (it->second - 3);
-            removeMatrixRowAndColumn(startIdx, P_rem);
-            removeMatrixRowAndColumn(startIdx, P_rem);
-            removeMatrixRowAndColumn(startIdx, P_rem);
+            removeMatrixRowAndColumn(startIdx, P_rem, 3);
+            //removeMatrixRowAndColumn(startIdx, P_rem);
+            //removeMatrixRowAndColumn(startIdx, P_rem);
+            //removeMatrixRowAndColumn(startIdx, P_rem);
             // update all indices for estimated_landmarks_ and estimated_contact_positions_
             for (auto& it2 : estimated_landmarks_) {
                 if (it2.second > it->second)
@@ -149,12 +156,13 @@ namespace inekf {
                 Eigen::MatrixXd X_rem = state_.getXMatrix();
                 Eigen::MatrixXd P_rem = state_.getP();
                 // remove corresponding row and column from X
-                removeMatrixRowAndColumn(it.second, X_rem);
+                removeMatrixRowAndColumn(it.second, X_rem, 1);
                 // remove 3 rows and columns from P
                 unsigned int startIdx = 3 + 3 * (it.second - 3);
-                removeMatrixRowAndColumn(startIdx, P_rem);
-                removeMatrixRowAndColumn(startIdx, P_rem);
-                removeMatrixRowAndColumn(startIdx, P_rem);
+                removeMatrixRowAndColumn(startIdx, P_rem, 3);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
                 // update all indices for estimated_landmarks_ and estimated_contact_positions_
                 for (auto& it2 : estimated_landmarks_) {
                     if (it2.second > it.second)
@@ -380,40 +388,40 @@ namespace inekf {
         if (state_.getStateType() == StateType::WorldCentric) {
             // propagate world-centric state estimates
             // nominal rotation state
-            X_pred.setRotation(R * G0);
+            //X_pred.setRotation(R * G0);
             // nominal velocity state
-            X_pred.setVector(3, v + (R * G1 * a + g_) * dt);
+            //X_pred.setVector(3, v + (R * G1 * a + g_) * dt);
             // nominal position state
-            X_pred.setVector(4, p + v * dt + (R * G2 * a + 0.5 * g_) * dt * dt);
+            //X_pred.setVector(4, p + v * dt + (R * G2 * a + 0.5 * g_) * dt * dt);
 
             // or: set rotation and vectors with delay and update Lie algebra vector \xi manually
             // avoiding multi-times updating computation
-            //X_pred.setRotationDelay(R * G0);
-            //X_pred.setVectorDelay(3, v + (R * G1 * a + g_) * dt);
-            //X_pred.setVectorDelay(4, p + v * dt + (R * G2 * a + 0.5 * g_) * dt * dt);
-            //X_pred.updateXiAndGamma();
+            X_pred.setRotationDelay(R * G0);
+            X_pred.setVectorDelay(3, v + (R * G1 * a + g_) * dt);
+            X_pred.setVectorDelay(4, p + v * dt + (R * G2 * a + 0.5 * g_) * dt * dt);
+            X_pred.updateXiAndGamma();
         } else {
             // propagate robot body-centric state estimates
             Eigen::Matrix3d G0T = G0.transpose();
             // nominal rotation state
-            X_pred.setRotation(G0T * R);
+            //X_pred.setRotation(G0T * R);
             // nominal velocity state
-            X_pred.setVector(3, G0T * (v - (G1 * a + R * g_) * dt));
+            //X_pred.setVector(3, G0T * (v - (G1 * a + R * g_) * dt));
             // nominal position state
-            X_pred.setVector(4, G0T * (p + v * dt - (G2 * a + 0.5 * R * g_) * dt * dt));
-            for (int i = 5; i < dimX; ++i) {
-                X_pred.setVector(i, G0T * state_.getX().getVector(i));
-            }
+            //X_pred.setVector(4, G0T * (p + v * dt - (G2 * a + 0.5 * R * g_) * dt * dt));
+            //for (int i = 5; i < dimX; ++i) {
+            //    X_pred.setVector(i, G0T * state_.getX().getVector(i));
+            //}
 
             // or: set rotation and vectors with delay and update Lie algebra vector \xi manually
             // avoiding multi-times updating computation
-            //X_pred.setRotationDelay(G0T * R);
-            //X_pred.setVectorDelay(3, G0T * (v - (G1 * a + R * g_) * dt));
-            //X_pred.setVectorDelay(4, G0T * (p + v * dt - (G2 * a + 0.5 * R * g_) * dt * dt));
-            //for (int i = 5; i < dimX; ++i) {
-            //    X_pred.setVectorDelay(i, G0T * state_.getX().getVector(i));
-            //}
-            //X_pred.updateXiAndGamma();
+            X_pred.setRotationDelay(G0T * R);
+            X_pred.setVectorDelay(3, G0T * (v - (G1 * a + R * g_) * dt));
+            X_pred.setVectorDelay(4, G0T * (p + v * dt - (G2 * a + 0.5 * R * g_) * dt * dt));
+            for (int i = 5; i < dimX; ++i) {
+                X_pred.setVectorDelay(i, G0T * state_.getX().getVector(i));
+            }
+            X_pred.updateXiAndGamma();
         }
 
         // update nominal state estimates
@@ -446,8 +454,8 @@ namespace inekf {
         // transform left invariant error to right invariant error using adjoint map
         if (error_type_ == ErrorType::LeftInvariant) {
             // augment adjoint matrix including \theta rows and columns
-            // | Ad_X  0 |
-            // |    0  I |
+            // | Ad_X 0 |
+            // |    0 I |
             Eigen::MatrixXd Ad_aug = Eigen::MatrixXd::Identity(dimP, dimP);
             Ad_aug.block(0, 0, dimP - dimTheta, dimP - dimTheta) = state_.getX().getAdjoint();
             P = (Ad_aug * P * Ad_aug.transpose()).eval();
@@ -533,9 +541,7 @@ namespace inekf {
 
     void InEKF::correctKinematics(const vectorKinematics& measured_kinematics) {
         // reset and clear observation matrices: Z, H, N
-        Z_ = Eigen::MatrixXd();
-        H_ = Eigen::MatrixXd();
-        N_ = Eigen::MatrixXd();
+        this->resetObservationMatrices();
 
         // contacts need to be removed
         std::vector<std::pair<unsigned int, unsigned int>> remove_contacts;
@@ -632,12 +638,13 @@ namespace inekf {
 
             for (auto it = remove_contacts.begin(); it != remove_contacts.end(); ++it) {
                 // remove corresponding row and column from X
-                removeMatrixRowAndColumn(it->second, X_rem_Mat);
+                removeMatrixRowAndColumn(it->second, X_rem_Mat, 1);
                 // remove 3 corresponding row and column from P
                 unsigned int startIdx = 3 + 3 * (it->second - 3);
-                removeMatrixRowAndColumn(startIdx, P_rem);
-                removeMatrixRowAndColumn(startIdx, P_rem);
-                removeMatrixRowAndColumn(startIdx, P_rem);
+                removeMatrixRowAndColumn(startIdx, P_rem, 3);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
+                //removeMatrixRowAndColumn(startIdx, P_rem);
                 // update all indices for estimated_landmarks_ and estimated_contact_positions_
                 for (auto& estimated_landmark : estimated_landmarks_) {
                     if (estimated_landmark.second > it->second)
@@ -707,9 +714,7 @@ namespace inekf {
 
     void InEKF::correctLandmarks(const vectorLandmarks& measured_landmarks) {
         // reset and clear observation matrices: Z, H, N
-        Z_ = Eigen::MatrixXd();
-        H_ = Eigen::MatrixXd();
-        N_ = Eigen::MatrixXd();
+        this->resetObservationMatrices();
 
         vectorLandmarks new_landmarks;
         std::vector<unsigned int> used_landmark_ids;
@@ -862,9 +867,7 @@ namespace inekf {
 
     void InEKF::correctContactPosition(const unsigned int id, const Eigen::Vector3d& measured_contact_position, const Eigen::Matrix3d& covariance, const Eigen::Vector3d& indices) {
         // reset and clear observation matrices: Z, H, N
-        Z_ = Eigen::MatrixXd();
-        H_ = Eigen::MatrixXd();
-        N_ = Eigen::MatrixXd();
+        this->resetObservationMatrices();
 
         // mapping matrix for reducing matrix dimensions
         Eigen::MatrixXd PI;

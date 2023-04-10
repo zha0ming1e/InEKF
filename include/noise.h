@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/4/23.
-//
-
 #ifndef INEKF_NOISE_H
 #define INEKF_NOISE_H
 
@@ -9,6 +5,7 @@
 
 namespace inekf {
 
+    // class Noise: noise covariance matrices for angular velocity & translational velocity measurements, gyroscope & accelerometer biases, contact & landmark measurements
     class Noise {
 
     public:

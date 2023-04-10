@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/4/23.
-//
-
 #ifndef INEKF_COMMON_H
 #define INEKF_COMMON_H
 
@@ -11,6 +7,8 @@
 #include <map>
 #include <algorithm>
 #include <utility>
+
+//#include <omp.h>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -41,16 +39,19 @@ namespace inekf {
     enum class IMURoleType {
         // input type: driven input of the system
         INPUT,
-        // output type: output measurement of the system
+        // output type: measurement output of the system
         OUTPUT
     };
 
-    // remove a particular row and column with a same index
-    inline void removeMatrixRowAndColumn(unsigned int index, Eigen::MatrixXd& mat) {
+    // remove num_to_remove rows and columns starting from a given index idx in a square matrix
+    inline void removeMatrixRowAndColumn(unsigned int idx, Eigen::MatrixXd& mat, unsigned int num_to_remove = 1) {
         unsigned int dim = mat.cols();
-        mat.block(index, 0, dim - index - 1, dim) = mat.bottomRows(dim - index - 1).eval();
-        mat.block(0, index, dim, dim - index - 1) = mat.rightCols(dim - index - 1).eval();
-        mat.conservativeResize(dim - 1, dim - 1);
+        // check reasonable parameters
+        assert((idx >= 0) && (idx < dim) && (num_to_remove > 0) && (num_to_remove < (dim - idx + 1)));
+
+        mat.block(idx, 0, dim - idx - num_to_remove, dim) = mat.bottomRows(dim - idx - num_to_remove).eval();
+        mat.block(0, idx, dim, dim - idx - num_to_remove) = mat.rightCols(dim - idx - num_to_remove).eval();
+        mat.conservativeResize(dim - num_to_remove, dim - num_to_remove);
     }
 
 }

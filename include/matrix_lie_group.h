@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/4/23.
-//
-
 #ifndef INEKF_MATRIX_LIE_GROUP_H
 #define INEKF_MATRIX_LIE_GROUP_H
 
@@ -37,6 +33,7 @@ namespace inekf {
     Eigen::MatrixXd Adjoint_SEK3(const Eigen::MatrixXd& X);
 
     // class Gamma: \Gamma_m series
+    // m-th order Gamma series: \Gamma_m = \sum_{n=0}^{\infty} \dfrac{1}{(n+m)!} (\phi^{\wedge})^n
     class Gamma {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -89,6 +86,14 @@ namespace inekf {
     // including: SO(3) -> K = 0, N = 3
     // including: SE_K(3) -> K = K, N = 3
     // including: T(N) -> K = 1, N = N and top-left "rotation matrix" is N * N dimensional Identity matrix, i.e. I(N)
+    // general representation: R_(N * N) is the general rotation matrix block
+    // | R_(N * N) p1_(N * 1) ... pK_(N * 1) |
+    // | 0_(1 * N)          1 ...          0 |
+    // | 0_(1 * N)          0 ...          0 |
+    // |         .          .   .          . |
+    // |         .          .   .          . |
+    // |         .          .   .          . |
+    // | 0_(1 * N)          0 ...          1 |
     class SEKN {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -136,6 +141,14 @@ namespace inekf {
     };
 
     // class SEK3: K direct isometry matrix Lie group SE_K(3), SO(3) is a special case for K = 0, i.e. SE_0(3)
+    // general representation: R_(3 * 3) is the 3-dimensional rotation matrix block
+    // | R_(3 * 3) p1_(3 * 1) ... pK_(3 * 1) |
+    // | 0_(1 * 3)          1 ...          0 |
+    // | 0_(1 * 3)          0 ...          0 |
+    // |         .          .   .          . |
+    // |         .          .   .          . |
+    // |         .          .   .          . |
+    // | 0_(1 * 3)          0 ...          1 |
     class SEK3 : public SEKN {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -204,6 +217,9 @@ namespace inekf {
     };
 
     // class TN: translation matrix Lie group T(N)
+    // general representation:
+    // | I_(N * N) t_(N * 1) |
+    // | 0_(1 * N)         1 |
     class TN : public SEKN {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;

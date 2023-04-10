@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/5/23.
-//
-
 #include "observation.h"
 
 namespace inekf {

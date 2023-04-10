@@ -1,11 +1,6 @@
-//
-// Created by zhaomingle on 4/6/23.
-//
-
 #ifndef INEKF_INEKF_H
 #define INEKF_INEKF_H
 
-#include "common.h"
 #include "noise.h"
 #include "matrix_lie_group.h"
 #include "observation.h"
@@ -50,6 +45,8 @@ namespace inekf {
         void setState(const State& state) { state_ = state; }
 
         void setNoise(const Noise& noise) { noise_ = noise; }
+        // reset and clear observation matrices: Z, H, N
+        void resetObservationMatrices();
 
         // purly virtual functions
         // filter propagation and correction functions

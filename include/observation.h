@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/5/23.
-//
-
 #ifndef INEKF_OBSERVATION_H
 #define INEKF_OBSERVATION_H
 
@@ -27,7 +23,7 @@ namespace inekf {
         Eigen::VectorXd Y_;
         // constant vector b
         Eigen::VectorXd b_;
-        // observation model matrix H
+        // observation model Jacobian matrix H
         Eigen::MatrixXd H_;
         // observation model covariance
         Eigen::MatrixXd N_;

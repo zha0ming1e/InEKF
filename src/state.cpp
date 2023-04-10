@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/5/23.
-//
-
 #include "state.h"
 #include "matrix_lie_group.h"
 
@@ -66,18 +62,19 @@ namespace inekf {
 
     void BaseState::copyDiagXMatrix(int n, Eigen::MatrixXd& BigX) const {
         unsigned int dimX = this->getXDim();
+        auto Xmat = X_.getX();
         for(int i = 0; i < n; ++i) {
             unsigned int startIndex = BigX.rows();
             BigX.conservativeResize(startIndex + dimX, startIndex + dimX);
             BigX.block(startIndex, 0, dimX, startIndex) = Eigen::MatrixXd::Zero(dimX, startIndex);
             BigX.block(0, startIndex, startIndex, dimX) = Eigen::MatrixXd::Zero(startIndex, dimX);
-            BigX.block(startIndex, startIndex, dimX, dimX) = X_.getX();
+            BigX.block(startIndex, startIndex, dimX, dimX) = Xmat;
         }
     }
 
     void BaseState::copyDiagXInverseMatrix(int n, Eigen::MatrixXd& BigXinv) const {
         unsigned int dimX = this->getXDim();
-        Eigen::MatrixXd Xinv = this->getXInverseMatrix();
+        auto Xinv = this->getXInverseMatrix();
         for(int i = 0; i < n; ++i) {
             unsigned int startIndex = BigXinv.rows();
             BigXinv.conservativeResize(startIndex + dimX, startIndex + dimX);
@@ -165,11 +162,11 @@ namespace inekf {
     }
 
     std::ostream& operator<<(std::ostream& os, const State& s) {
-        os << "---------- State ----------" << std::endl;
+        os << "---------- State ---------- \n" << std::endl;
         os << "X: \n" << s.getXMatrix() << std::endl << std::endl;
         os << "Theta: \n" << s.getTheta() << std::endl << std::endl;
         os << "P: \n" << s.getP() << std::endl;
-        os << "-----------------------------------";
+        os << "--------------------------- \n" << std::endl;
         return os;
     }
 

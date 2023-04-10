@@ -1,11 +1,6 @@
-//
-// Created by zhaomingle on 4/5/23.
-//
-
 #ifndef INEKF_STATE_H
 #define INEKF_STATE_H
 
-#include "common.h"
 #include "matrix_lie_group.h"
 
 namespace inekf {
@@ -70,7 +65,6 @@ namespace inekf {
         void copyDiagXMatrix(int n, Eigen::MatrixXd& BigX) const;
 
         void copyDiagXInverseMatrix(int n, Eigen::MatrixXd& BigXinv) const;
-
 
     protected:
         // state type: world-centric or robot body centric

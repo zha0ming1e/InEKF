@@ -1,7 +1,3 @@
-//
-// Created by zhaomingle on 4/4/23.
-//
-
 #include "matrix_lie_group.h"
 
 namespace inekf {
@@ -24,7 +20,7 @@ namespace inekf {
         // check m >= 0
         assert(m >= 0);
 
-        // m-th order Gamma series: \Gamma_m = \sum_{n=0}^{\infty} \dfrac{1}{(n+m)!} (phi_^\wedge)^n
+        // m-th order Gamma series: \Gamma_m = \sum_{n=0}^{\infty} \dfrac{1}{(n+m)!} (\phi^{\wedge})^n
         Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
         Eigen::Matrix3d phix = skew(phi);
         double phi_norm = phi.norm();
@@ -97,9 +93,13 @@ namespace inekf {
         // rotation skew block
         xi_hat.block<3, 3>(0, 0) = phix;
         // vector hat block
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
         for (int i = 0; i < K; ++i) {
             xi_hat.block<3, 1>(0, 3 + i) = xi.segment<3>(3 + 3 * i);
         }
+//}
 
         return xi_hat;
     }
@@ -121,9 +121,13 @@ namespace inekf {
         // rotation matrix block
         X.block<3, 3>(0, 0) = R;
         // vector block
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
         for (int i = 0; i < K; ++i) {
             X.block<3, 1>(0, 3 + i) = Jl * xi.segment<3>(3 + 3 * i);
         }
+//}
 
         return X;
     }
@@ -138,10 +142,14 @@ namespace inekf {
 
         // assembling
         Ad_X.block<3, 3>(0, 0) = R;
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
         for (int i = 0; i < K; ++i) {
             Ad_X.block<3, 3>(3 + 3 * i, 0) = skew(X.block<3, 1>(0, 3 + i)) * R;
             Ad_X.block<3, 3>(3 + 3 * i, 3 + 3 * i) = R;
         }
+//}
 
         return Ad_X;
     }
@@ -186,7 +194,7 @@ namespace inekf {
         // check m >= 0
         assert(m >= 0);
 
-        // m-th order Gamma series: \Gamma_m = \sum_{n=0}^{\infty} \dfrac{1}{(n+m)!} (phi_^\wedge)^n
+        // m-th order Gamma series: \Gamma_m = \sum_{n=0}^{\infty} \dfrac{1}{(n+m)!} (\phi^{\wedge})^n
         Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
 
         // check if phi_norm_ is small enough
@@ -279,9 +287,13 @@ namespace inekf {
         // check K_ > 0, i.e. X_ is not SO(3)
         if (K_ > 0) {
             // vector hat block
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
             for (int i = 0; i < K_; ++i) {
                 xi_hat.block<3, 1>(0, 3 + i) = xi_.segment<3>(3 + 3 * i);
             }
+//}
         }
 
         return xi_hat;
@@ -297,10 +309,14 @@ namespace inekf {
         Ad_X.block<3, 3>(0, 0) = R;
         // check K_ > 0, i.e. X_ is not SO(3)
         if (K_ > 0) {
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
             for (int i = 0; i < K_; ++i) {
                 Ad_X.block<3, 3>(3 + 3 * i, 3 + 3 * i) = R;
                 Ad_X.block<3, 3>(3 + 3 * i, 0) = skew(X_.block<3, 1>(0, 3 + i)) * R;
             }
+//}
         }
 
         return Ad_X;
@@ -323,9 +339,13 @@ namespace inekf {
         X_inv.block<3, 3>(0, 0) = RT;
         // check K_ > 0, i.e. X_ is not SO(3)
         if (K_ > 0) {
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
             for (int i = 0; i < K_; ++i) {
                 X_inv.block<3, 1>(0, 3 + i) = -RT * X_.block<3, 1>(0, 3 + i);
             }
+//}
         }
 
         return SEK3(X_inv);
@@ -405,9 +425,13 @@ namespace inekf {
             //Eigen::Matrix3d Jl = gamma_.getGamma(1);
             Eigen::Matrix3d Jl = this->getLeftJacobianSO3();
             // vector block
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
             for (int i = 0; i < K_; ++i) {
                 X_.block<3, 1>(0, 3 + i) = Jl * xi_.segment<3>(3 + 3 * i);
             }
+//}
         }
     }
 
@@ -429,9 +453,13 @@ namespace inekf {
             //Eigen::Matrix3d Jl_inv = RightJacobian_SO3(gamma_.getPhi()).transpose();
             Eigen::Matrix3d Jl_inv = this->getRightJacobianSO3().transpose();
             // vector segment
+//{
+//#pragma omp parallel for num_threads(8)
+//#pragma omp parallel for
             for (int i = 0; i < K_; ++i) {
                 xi_.segment<3>(3 + 3 * i) = Jl_inv * X_.block<3, 1>(0, 3 + i);
             }
+//}
         }
     }
 
