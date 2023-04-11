@@ -1,6 +1,6 @@
 # InEKF 
 
-**InEKF** is a light-weight library for **In**variant **E**xtended **K**alman **F**ilter on matrix Lie groups. InEKF is implemented for systems whose states evolving on the abstract $\mathrm{N}$-dimensional $\mathrm{K}$ direct isometry matrix Lie groups $\mathrm{SE_K(N)}$ (including the 3-dimensional special orthogonal group $\mathrm{SO(3)}$, the 3-dimensional $\mathrm{K}$ direct isometry special Euclidean group $\mathrm{SE_K(3)}$ and $\mathrm{N}$-dimensional translation matrix group $\mathrm{T(N)}$) and Euclidean vector spaces. Except for InEKF, the library can be extended to other Kalman filters, e.g. the conventional Extended Kalman Filter (EKF) or the Iterated Error-State Extended Kalman Filter (IESEKF). 
+**InEKF** is a light-weight library for **In**variant **E**xtended **K**alman **F**ilter on matrix Lie groups. InEKF is implemented for systems whose states evolve on the abstract $\mathrm{N}$-dimensional $\mathrm{K}$ direct isometry matrix Lie groups $\mathrm{SE_K(N)}$ (including the 3-dimensional special orthogonal group $\mathrm{SO(3)}$, the 3-dimensional $\mathrm{K}$ direct isometry special Euclidean group $\mathrm{SE_K(3)}$ and $\mathrm{N}$-dimensional translation matrix group $\mathrm{T(N)}$) and Euclidean vector spaces. Except for InEKF, the library can be extended to other Kalman filters, e.g. the conventional Extended Kalman Filter (EKF) or the Iterated Error-State Extended Kalman Filter (IESEKF) for multiple robot platforms, such as legged robots and Unmanned Aerial Vehicles (UAVs). 
 
 
 
