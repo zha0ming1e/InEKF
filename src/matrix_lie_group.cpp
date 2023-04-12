@@ -2,7 +2,7 @@
 
 namespace inekf {
 
-    long factorial(int n) {
+    long factorial(unsigned int n) {
         return (n == 0 || n == 1) ? 1 : (factorial(n - 1) * n);
     }
 
@@ -190,7 +190,7 @@ namespace inekf {
         cos_phi_norm_ = gm.getCosPhiNorm();
     }
 
-    Eigen::Matrix3d Gamma::getGamma(int m) const {
+    Eigen::Matrix3d Gamma::getGamma(unsigned int m) const {
         // check m >= 0
         assert(m >= 0);
 
@@ -231,6 +231,10 @@ namespace inekf {
                 }
             }
         }
+    }
+
+    Eigen::Matrix3d Gamma::getGammaNegativePhim1() const {
+        return (Eigen::Matrix3d::Identity() + ((cos_phi_norm_ - 1.0) / phi_norm2_) * phix_ + ((phi_norm_ - sin_phi_norm_) / (phi_norm_ * phi_norm2_)) * phix_ * phix_);
     }
 
     // class SEKN
@@ -327,7 +331,7 @@ namespace inekf {
     }
 
     Eigen::Matrix3d SEK3::getRightJacobianSO3() const {
-        return Gamma(-gamma_.getPhi()).getGamma(1);
+        return gamma_.getGammaNegativePhim1();
     }
 
     SEK3 SEK3::getInverse() const {

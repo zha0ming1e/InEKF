@@ -6,7 +6,7 @@
 namespace inekf {
 
     // factorial
-    long factorial(int n);
+    long factorial(unsigned int n);
 
     // 3D Lie algebra
     // skew-symmetric matrix of 3D Lie algebra
@@ -53,7 +53,9 @@ namespace inekf {
         ~Gamma() = default;
 
         // functions
-        Eigen::Matrix3d getGamma(int m) const;
+        Eigen::Matrix3d getGamma(unsigned int m) const;
+
+        Eigen::Matrix3d getGammaNegativePhim1() const;
 
         Eigen::Vector3d getPhi() const { return phi_; }
 
