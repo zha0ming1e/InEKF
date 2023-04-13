@@ -416,6 +416,8 @@ namespace inekf {
         xi_ = y.xi_;
         X_ = y.X_;
         gamma_ = y.gamma_;
+
+        return *this;
     }
 
     void SEK3::expSEK3() {
@@ -536,6 +538,8 @@ namespace inekf {
         N_ = y.N_;
         xi_ = y.xi_;
         X_ = y.X_;
+
+        return *this;
     }
 
 }
