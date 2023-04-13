@@ -23,11 +23,23 @@ namespace inekf {
 
         BaseState(const SEK3& X, const Eigen::MatrixXd& P);
 
+        BaseState(double t, unsigned int K);
+
+        BaseState(double t, const Eigen::MatrixXd& X);
+
+        BaseState(double t, const SEK3& X);
+
+        BaseState(double t, const Eigen::MatrixXd& X, const Eigen::MatrixXd& P);
+
+        BaseState(double t, const SEK3& X, const Eigen::MatrixXd& P);
+
         // destructor
         ~BaseState() = default;
 
         // functions
         // get
+        double getT() const { return t_; }
+
         SEK3 getX() const { return X_; }
 
         Eigen::MatrixXd getXMatrix() const { return X_.getX(); }
@@ -56,6 +68,8 @@ namespace inekf {
 
         Eigen::MatrixXd getBodyXMatrix() const;
         // set
+        void setT(const double t) { t_ = t; }
+
         void setX(const SEK3& X) { X_ = X; }
 
         void setX(const Eigen::MatrixXd& X) { X_ = SEK3(X); }
@@ -67,6 +81,8 @@ namespace inekf {
         void copyDiagXInverseMatrix(int n, Eigen::MatrixXd& BigXinv) const;
 
     protected:
+        // time
+        double t_ = 0;
         // state type: world-centric or robot body centric
         StateType state_type_ = StateType::WorldCentric;
         // R (rotation), v (velocity), p (position), ... states on the matrix Lie group SE_K(3)
@@ -98,6 +114,18 @@ namespace inekf {
         State(const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P);
 
         State(const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P);
+
+        State(double t, const Eigen::MatrixXd& X);
+
+        State(double t, const SEK3& X);
+
+        State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta);
+
+        State(double t, const SEK3& X, const Eigen::VectorXd& Theta);
+
+        State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P);
+
+        State(double t, const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P);
 
         // destructor
         ~State() = default;

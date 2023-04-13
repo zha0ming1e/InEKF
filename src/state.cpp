@@ -28,6 +28,26 @@ namespace inekf {
         //
     }
 
+    BaseState::BaseState(double t, unsigned int K) : t_(t), X_(K) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
+    }
+
+    BaseState::BaseState(double t, const Eigen::MatrixXd& X) : t_(t), X_(X) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
+    }
+
+    BaseState::BaseState(double t, const SEK3& X) : t_(t), X_(X) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
+    }
+
+    BaseState::BaseState(double t, const Eigen::MatrixXd& X, const Eigen::MatrixXd& P) : t_(t), X_(X), P_(P) {
+        //
+    }
+
+    BaseState::BaseState(double t, const SEK3& X, const Eigen::MatrixXd& P) : t_(t), X_(X), P_(P) {
+        //
+    }
+
     SEK3 BaseState::getWorldX() const {
         if (state_type_ == StateType::WorldCentric) {
             return this->getX();
@@ -105,12 +125,36 @@ namespace inekf {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
     }
 
-    State::State(const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(X), Theta_(Theta) {
-        P_ = P;
+    State::State(const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(X, P), Theta_(Theta) {
+        //
     }
 
-    State::State(const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(X), Theta_(Theta) {
-        P_ = P;
+    State::State(const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(X, P), Theta_(Theta) {
+        //
+    }
+
+    State::State(double t, const Eigen::MatrixXd& X) : BaseState(t, X), Theta_(Eigen::VectorXd::Zero(6)) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
+    }
+
+    State::State(double t, const SEK3& X) : BaseState(t, X), Theta_(Eigen::VectorXd::Zero(6)) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
+    }
+
+    State::State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta) : BaseState(t, X), Theta_(Theta) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
+    }
+
+    State::State(double t, const SEK3& X, const Eigen::VectorXd& Theta) : BaseState(t, X), Theta_(Theta) {
+        P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
+    }
+
+    State::State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(t, X, P), Theta_(Theta) {
+        //
+    }
+
+    State::State(double t, const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(t, X, P), Theta_(Theta) {
+        //
     }
 
     Eigen::Matrix3d State::getWorldRotation() const {
@@ -163,6 +207,7 @@ namespace inekf {
 
     std::ostream& operator<<(std::ostream& os, const State& s) {
         os << "---------- State ---------- \n" << std::endl;
+        os << "t: \n" << s.getT() << std::endl << std::endl;
         os << "X: \n" << s.getXMatrix() << std::endl << std::endl;
         os << "Theta: \n" << s.getTheta() << std::endl << std::endl;
         os << "P: \n" << s.getP() << std::endl;

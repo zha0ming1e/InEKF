@@ -151,7 +151,7 @@ namespace inekf {
         // correct the state estimate and covariance in right invariant type using relative landmark position measurements
         void correctLandmarks(const vectorLandmarks& measured_landmarks);
         // correct the state estimate and covariance in left invariant type using absolute z-position of contact point measurements
-        void correctContactPosition(const unsigned int id, const Eigen::Vector3d& measured_contact_position, const Eigen::Matrix3d& covariance, const Eigen::Vector3d& indices);
+        void correctContactPosition(unsigned int id, const Eigen::Vector3d& measured_contact_position, const Eigen::Matrix3d& covariance, const Eigen::Vector3d& indices);
         // correct the state estimate and covariance in right invariant type using magnetic field measurements
         //void correctMagnetometer(const Eigen::Vector3d& measured_magnetic_field, const Eigen::Matrix3d& covariance);
         // correct the state estimate and covariance in left invariant type using GPS absolute position measurements
