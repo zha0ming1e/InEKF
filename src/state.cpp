@@ -28,23 +28,23 @@ namespace inekf {
         //
     }
 
-    BaseState::BaseState(double t, unsigned int K) : t_(t), X_(K) {
+    BaseState::BaseState(double timestamp, unsigned int K) : timestamp_(timestamp), X_(K) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
     }
 
-    BaseState::BaseState(double t, const Eigen::MatrixXd& X) : t_(t), X_(X) {
+    BaseState::BaseState(double timestamp, const Eigen::MatrixXd& X) : timestamp_(timestamp), X_(X) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
     }
 
-    BaseState::BaseState(double t, const SEK3& X) : t_(t), X_(X) {
+    BaseState::BaseState(double timestamp, const SEK3& X) : timestamp_(timestamp), X_(X) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF(), this->getXDoF());
     }
 
-    BaseState::BaseState(double t, const Eigen::MatrixXd& X, const Eigen::MatrixXd& P) : t_(t), X_(X), P_(P) {
+    BaseState::BaseState(double timestamp, const Eigen::MatrixXd& X, const Eigen::MatrixXd& P) : timestamp_(timestamp), X_(X), P_(P) {
         //
     }
 
-    BaseState::BaseState(double t, const SEK3& X, const Eigen::MatrixXd& P) : t_(t), X_(X), P_(P) {
+    BaseState::BaseState(double timestamp, const SEK3& X, const Eigen::MatrixXd& P) : timestamp_(timestamp), X_(X), P_(P) {
         //
     }
 
@@ -133,27 +133,27 @@ namespace inekf {
         //
     }
 
-    State::State(double t, const Eigen::MatrixXd& X) : BaseState(t, X), Theta_(Eigen::VectorXd::Zero(6)) {
+    State::State(double timestamp, const Eigen::MatrixXd& X) : BaseState(timestamp, X), Theta_(Eigen::VectorXd::Zero(6)) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
     }
 
-    State::State(double t, const SEK3& X) : BaseState(t, X), Theta_(Eigen::VectorXd::Zero(6)) {
+    State::State(double timestamp, const SEK3& X) : BaseState(timestamp, X), Theta_(Eigen::VectorXd::Zero(6)) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
     }
 
-    State::State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta) : BaseState(t, X), Theta_(Theta) {
+    State::State(double timestamp, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta) : BaseState(timestamp, X), Theta_(Theta) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
     }
 
-    State::State(double t, const SEK3& X, const Eigen::VectorXd& Theta) : BaseState(t, X), Theta_(Theta) {
+    State::State(double timestamp, const SEK3& X, const Eigen::VectorXd& Theta) : BaseState(timestamp, X), Theta_(Theta) {
         P_ = Eigen::MatrixXd::Identity(this->getXDoF() + this->getThetaDim(), this->getXDoF() + this->getThetaDim());
     }
 
-    State::State(double t, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(t, X, P), Theta_(Theta) {
+    State::State(double timestamp, const Eigen::MatrixXd& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(timestamp, X, P), Theta_(Theta) {
         //
     }
 
-    State::State(double t, const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(t, X, P), Theta_(Theta) {
+    State::State(double timestamp, const SEK3& X, const Eigen::VectorXd& Theta, const Eigen::MatrixXd& P) : BaseState(timestamp, X, P), Theta_(Theta) {
         //
     }
 
@@ -207,7 +207,7 @@ namespace inekf {
 
     std::ostream& operator<<(std::ostream& os, const State& s) {
         os << "---------- State ---------- \n" << std::endl;
-        os << "t: \n" << s.getT() << std::endl << std::endl;
+        os << "Timestamp: \n" << s.getTimestamp() << std::endl << std::endl;
         os << "X: \n" << s.getXMatrix() << std::endl << std::endl;
         os << "Theta: \n" << s.getTheta() << std::endl << std::endl;
         os << "P: \n" << s.getP() << std::endl;

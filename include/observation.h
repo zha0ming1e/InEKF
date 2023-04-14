@@ -45,6 +45,8 @@ namespace inekf {
         ~Kinematics() = default;
 
     public:
+        // timestamp
+        double timestamp = 0;
         // measurement index
         int id = 0;
         // measurement pose
@@ -67,6 +69,8 @@ namespace inekf {
         ~Landmark() = default;
 
     public:
+        // timestamp
+        double timestamp = 0;
         // measurement index
         int id = 0;
         // measurement position

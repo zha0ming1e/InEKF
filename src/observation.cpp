@@ -11,7 +11,7 @@ namespace inekf {
 
     // class Kinematics
     Kinematics::Kinematics(int id_in, Eigen::Matrix4d pose_in,
-                           Eigen::Matrix<double,6,6> covariance_in)
+                           Eigen::Matrix<double, 6, 6> covariance_in)
                            : id(id_in), pose(pose_in), covariance(covariance_in) {
         //
     }
