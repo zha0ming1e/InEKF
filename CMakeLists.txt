@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.0)
 project(inekf)
 
 # no warnings 
@@ -13,7 +13,7 @@ if (USE_CPP11)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif ()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DEIGEN_NO_DEBUG -march=native -Wl,--no-as-needed")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DEIGEN_NO_DEBUG -Wl,--no-as-needed")
 SET(CMAKE_CXX_COMPILER /usr/bin/g++)
 
 message("CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS})
@@ -51,21 +51,21 @@ message("EIGEN3_INCLUDE_DIR: " ${EIGEN3_INCLUDE_DIR})
 
 file(GLOB src_files
 		"${PROJECT_SOURCE_DIR}/src/*.cpp"
-		)
+)
 
-add_executable(landmarks ${PROJECT_SOURCE_DIR}/src/examples/landmarks.cpp ${src_files})
-add_executable(kinematics ${PROJECT_SOURCE_DIR}/src/examples/kinematics.cpp ${src_files})
-add_executable(propagation_speed ${PROJECT_SOURCE_DIR}/src/tests/propagation_speed.cpp ${src_files})
-add_executable(correction_speed ${PROJECT_SOURCE_DIR}/src/tests/correction_speed.cpp ${src_files})
-add_executable(large_state_speed ${PROJECT_SOURCE_DIR}/src/tests/large_state_speed.cpp ${src_files})
-add_executable(left_vs_right_error_dynamics ${PROJECT_SOURCE_DIR}/src/tests/left_vs_right_error_dynamics.cpp ${src_files})
+#add_executable(landmarks ${PROJECT_SOURCE_DIR}/src/examples/landmarks.cpp ${src_files})
+#add_executable(kinematics ${PROJECT_SOURCE_DIR}/src/examples/kinematics.cpp ${src_files})
+#add_executable(propagation_speed ${PROJECT_SOURCE_DIR}/src/tests/propagation_speed.cpp ${src_files})
+#add_executable(correction_speed ${PROJECT_SOURCE_DIR}/src/tests/correction_speed.cpp ${src_files})
+#add_executable(large_state_speed ${PROJECT_SOURCE_DIR}/src/tests/large_state_speed.cpp ${src_files})
+#add_executable(left_vs_right_error_dynamics ${PROJECT_SOURCE_DIR}/src/tests/left_vs_right_error_dynamics.cpp ${src_files})
 
-target_link_libraries(landmarks ${Boost_LIBRARIES})
-target_link_libraries(kinematics ${Boost_LIBRARIES})
-target_link_libraries(propagation_speed ${Boost_LIBRARIES})
-target_link_libraries(correction_speed ${Boost_LIBRARIES})
-target_link_libraries(large_state_speed ${Boost_LIBRARIES})
-target_link_libraries(left_vs_right_error_dynamics ${Boost_LIBRARIES})
+#target_link_libraries(landmarks ${Boost_LIBRARIES})
+#target_link_libraries(kinematics ${Boost_LIBRARIES})
+#target_link_libraries(propagation_speed ${Boost_LIBRARIES})
+#target_link_libraries(correction_speed ${Boost_LIBRARIES})
+#target_link_libraries(large_state_speed ${Boost_LIBRARIES})
+#target_link_libraries(left_vs_right_error_dynamics ${Boost_LIBRARIES})
 
 add_library(inekf SHARED
 		"${PROJECT_SOURCE_DIR}/src/inekf.cpp"
@@ -91,6 +91,6 @@ message("inekf_libraries: " ${inekf_libraries})
 
 configure_file(inekfConfig.cmake.in
 		"${PROJECT_BINARY_DIR}/inekfConfig.cmake" @ONLY
-		)
+)
 
 message("PROJECT_BINARY_DIR: " ${PROJECT_BINARY_DIR})
