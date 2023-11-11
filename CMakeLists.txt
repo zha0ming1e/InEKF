@@ -26,7 +26,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 include_directories("${PROJECT_SOURCE_DIR}/include/")
 
 # Threading
-find_package (Threads)
+find_package(Threads)
 
 # Boost
 find_package(Boost 1.57 REQUIRED COMPONENTS system)
