@@ -31,6 +31,7 @@
     mkdir build && cd build/ 
     cmake .. && make -j8 
     # or: cmake .. && make -j$(( $( cat /proc/cpuinfo | grep "processor" | sort -u | wc -l ) - 1 ))
+    # or: cmake .. && make -j$(nproc --ignore=1)
     ```
 
 ### Include InEKF in Your Projects 
@@ -48,7 +49,7 @@
 
 - Barrau, A. and Bonnabel, S., 2016. The invariant extended Kalman filter as a stable observer. *IEEE Transactions on Automatic Control*, *62*(4), pp.1797-1812. 
 
-    ```
+    ```bibtex
     @article{barrau2016invariant,
       title={The invariant extended Kalman filter as a stable observer},
       author={Barrau, Axel and Bonnabel, Silv{\`e}re},
@@ -63,7 +64,7 @@
 
 - Hartley, R., Ghaffari, M., Eustice, R.M. and Grizzle, J.W., 2020. Contact-aided invariant extended Kalman filtering for robot state estimation. *The International Journal of Robotics Research*, *39*(4), pp.402-430. 
 
-    ```
+    ```bibtex
     @article{hartley2020contact,
       title={Contact-aided invariant extended Kalman filtering for robot state estimation},
       author={Hartley, Ross and Ghaffari, Maani and Eustice, Ryan M and Grizzle, Jessy W},
@@ -78,7 +79,7 @@
 
 - Bloesch, M., Hutter, M., Hoepflinger, M.A., Leutenegger, S., Gehring, C., Remy, C.D. and Siegwart, R., 2013. State estimation for legged robots-consistent fusion of leg kinematics and IMU. *Robotics*, *17*, pp.17-24. 
 
-    ```
+    ```bibtex
     @article{bloesch2013state,
       title={State estimation for legged robots-consistent fusion of leg kinematics and IMU},
       author={Bloesch, Michael and Hutter, Marco and Hoepflinger, Mark A and Leutenegger, Stefan and Gehring, Christian and Remy, C David and Siegwart, Roland},
@@ -92,7 +93,7 @@
 
 - Ramadoss, P., Romualdi, G., Dafarra, S., Chavez, F.J.A., Traversaro, S. and Pucci, D., 2021, May. Diligent-kio: A proprioceptive base estimator for humanoid robots using extended kalman filtering on matrix lie groups. In *2021 IEEE International Conference on Robotics and Automation (ICRA)* (pp. 2904-2910). IEEE. 
 
-    ```
+    ```bibtex
     @inproceedings{ramadoss2021diligent,
       title={Diligent-kio: A proprioceptive base estimator for humanoid robots using extended kalman filtering on matrix lie groups},
       author={Ramadoss, Prashanth and Romualdi, Giulio and Dafarra, Stefano and Chavez, Francisco Javier Andrade and Traversaro, Silvio and Pucci, Daniele},
@@ -105,7 +106,7 @@
 
 - Ramadoss, P., Romualdi, G., Dafarra, S., Traversaro, S. and Pucci, D., 2022, October. Comparison of EKF-Based Floating Base Estimators for Humanoid Robots with Flat Feet. In *2022 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)* (pp. 6780-6787). IEEE. 
 
-    ```
+    ```bibtex
     @inproceedings{ramadoss2022comparison,
       title={Comparison of EKF-Based Floating Base Estimators for Humanoid Robots with Flat Feet},
       author={Ramadoss, Prashanth and Romualdi, Giulio and Dafarra, Stefano and Traversaro, Silvio and Pucci, Daniele},
